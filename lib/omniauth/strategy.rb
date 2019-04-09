@@ -223,7 +223,7 @@ module OmniAuth
           env['rack.session']['omniauth.origin'] = env['HTTP_REFERER']
         end
 
-        log :info, "omniauth.origin=#{env['rack.session']['omniauth.origin']}"
+        log :info, "[#request_call, session] omniauth.origin=#{env['rack.session']['omniauth.origin']}"
 
         request_phase
       end
@@ -233,9 +233,12 @@ module OmniAuth
     def callback_call
       setup_phase
       log :info, 'Callback phase initiated.'
+      log :info, "[#callback_call, session] omniauth.origin=#{session['omniauth.origin']}"
       @env['omniauth.origin'] = session.delete('omniauth.origin')
       @env['omniauth.origin'] = nil if env['omniauth.origin'] == ''
       @env['omniauth.params'] = session.delete('omniauth.params') || {}
+      log :info, "[#callback_call, env] omniauth.origin=#{@env['omniauth.origin']}"
+
       OmniAuth.config.before_callback_phase.call(@env) if OmniAuth.config.before_callback_phase
       callback_phase
     end
