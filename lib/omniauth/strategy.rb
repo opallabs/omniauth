@@ -223,6 +223,8 @@ module OmniAuth
           env['rack.session']['omniauth.origin'] = env['HTTP_REFERER']
         end
 
+        log :info, "omniauth.origin=#{env['rack.session']['omniauth.origin']}"
+
         request_phase
       end
     end
